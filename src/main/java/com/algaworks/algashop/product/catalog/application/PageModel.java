@@ -1,4 +1,4 @@
-package com.algaworks.algashop.product.catalog.application.product.query;
+package com.algaworks.algashop.product.catalog.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class PageModel<T> {
-
     private int number;
     private int size;
     private int totalPages;
