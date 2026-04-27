@@ -1,6 +1,7 @@
 package com.algaworks.algashop.product.catalog.domain.model.product;
 
 import com.algaworks.algashop.product.catalog.domain.model.IdGenerator;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class Product {
     private Long version;
 
     @CreatedDate
-    private OffsetDateTime createdAt;
+    private OffsetDateTime addedAt;
 
     @LastModifiedDate
     private OffsetDateTime updatedAt;
@@ -50,6 +51,7 @@ public class Product {
     @LastModifiedBy
     private UUID lastModifiedByUserId;
 
+    @Builder
     public Product(String name, String brand, String description, Boolean enabled, BigDecimal regularPrice, BigDecimal salePrice) {
         this.id = IdGenerator.generateTimeBasedUUID();
         this.name = name;
