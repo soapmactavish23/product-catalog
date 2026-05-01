@@ -38,6 +38,25 @@ public class ProductController {
         return productQueryService.findById(productId);
     }
 
+    @PutMapping("/{productId}")
+    public ProductDetailOutput update(@PathVariable UUID productId,
+                                      @RequestBody @Valid ProductInput input) {
+        productManagementApplicationService.update(productId, input);
+        return productQueryService.findById(productId);
+    }
+
+    @DeleteMapping("/{productId}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void disable(@PathVariable UUID productId) {
+        productManagementApplicationService.disable(productId);
+    }
+
+    @PutMapping("/{productId}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable UUID productId) {
+        productManagementApplicationService.enable(productId);
+    }
+
     @GetMapping
     public PageModel<ProductDetailOutput> filter(
             @RequestParam(name = "size", required = false) Integer size,
