@@ -80,9 +80,8 @@ public class ProductBase {
     }
 
     private void mockFilterProducts() {
-        Mockito.when(productQueryService.filter(
-                        Mockito.anyInt(), Mockito.anyInt()))
-                .then((answer)-> {
+        Mockito.when(productQueryService.filter(Mockito.any(ProductFilter.class)))
+                .then(answer -> {
                     Integer size = answer.getArgument(0);
 
                     return PageModel.<ProductDetailOutput>builder()
