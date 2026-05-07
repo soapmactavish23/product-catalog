@@ -69,14 +69,28 @@ public class ProductQueryServiceImpl implements ProductQueryService {
     }
 
     private Sort sortWith(ProductFilter filter) {
-        return Sort.by(filter.getSortDirection(), filter.getSortByPropertyOrDefault().getPropertyName());
+        return Sort.by(filter.getSortDirectionOrDefault(),
+                filter.getSortByPropertyOrDefault().getPropertyName());
     }
 
     private Query queryWith(ProductFilter filter) {
         Query query = new Query();
 
-        if(filter.getEnabled() != null) {
+        if (filter.getEnabled() != null) {
             query.addCriteria(Criteria.where("enabled").is(filter.getEnabled()));
+        }
+
+        if (filter.getAddedAtFrom() != null && filter.getAddedAtTo() != null) {
+            query.addCriteria(Criteria.where("addedAt")
+                    .gte(filter.getAddedAtFrom())
+                    .lte(filter.getAddedAtTo())
+            );
+        } else {
+            if (filter.getAddedAtFrom() != null) {
+                query.addCriteria(Criteria.where("addedAt").gte(filter.getAddedAtFrom()));
+            } else if (filter.getAddedAtTo() != null) {
+                query.addCriteria(Criteria.where("addedAt").lte(filter.getAddedAtTo()));
+            }
         }
 
         return query;
