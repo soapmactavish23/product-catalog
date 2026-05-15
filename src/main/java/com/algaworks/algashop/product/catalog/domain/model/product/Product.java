@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -31,6 +32,7 @@ public class Product {
 
     private String name;
 
+    @Indexed(name = "idx_product_by_brand")
     private String brand;
 
     private String description;
@@ -60,6 +62,7 @@ public class Product {
 
     @DocumentReference
     @Field(name = "categoryId")
+    @Indexed(name = "idx_product_by_category")
     private Category category;
 
     private Integer discountPercentageRounded;

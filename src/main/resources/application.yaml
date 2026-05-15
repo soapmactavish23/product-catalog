@@ -6,6 +6,9 @@ spring:
   mongodb:
     uri: mongodb://root:algashop@localhost:27017/product_catalog?authSource=admin
     representation.uuid: standard
+  data:
+    mongodb:
+      auto-index-creation: true
 
 logging:
   level:
