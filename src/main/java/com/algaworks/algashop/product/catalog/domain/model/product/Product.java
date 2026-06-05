@@ -3,18 +3,14 @@ package com.algaworks.algashop.product.catalog.domain.model.product;
 import com.algaworks.algashop.product.catalog.domain.model.DomainException;
 import com.algaworks.algashop.product.catalog.domain.model.IdGenerator;
 import com.algaworks.algashop.product.catalog.domain.model.category.Category;
-import io.micrometer.common.util.StringUtils;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.*;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.TextScore;
+import org.springframework.data.mongodb.core.mapping.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -22,16 +18,17 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Getter
-@NoArgsConstructor
 @Document(collection = "products")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@CompoundIndex(name = "pidx_product_by-category_enabledTrue_salePrice",
-    def = "{'category.id': 1, 'salePrice': 1}",
-    partialFilter = "{'enabled': true}")
-@CompoundIndex(name = "pidx_product_by-category_enabledTrue_addedAt",
-        def = "{'category.id': 1, 'addedAt': 1}",
+@CompoundIndex(name = "pidx_product_by_category_enabledTrue_salePrice",
+        def = "{'category.id': 1, 'salePrice': 1}",
         partialFilter = "{'enabled': true}")
+@CompoundIndex(name = "pidx_product_by_category_enabledTrue_addedAt",
+        def = "{'category.id': 1, 'addedAt': -1}",
+        partialFilter = "{'enabled': true}"
+)
 public class Product extends AbstractAggregateRoot<Product> {
 
     @Id
@@ -78,8 +75,8 @@ public class Product extends AbstractAggregateRoot<Product> {
     private Float score;
 
     @Builder
-    public Product(String name, String brand, String description, Boolean enabled, BigDecimal regularPrice,
-                   BigDecimal salePrice, Category category) {
+    public Product(String name, String brand, String description,
+                   Boolean enabled, BigDecimal regularPrice, BigDecimal salePrice, Category category) {
         this.setId(IdGenerator.generateTimeBasedUUID());
         this.setName(name);
         this.setBrand(brand);
@@ -88,6 +85,8 @@ public class Product extends AbstractAggregateRoot<Product> {
         this.setRegularPrice(regularPrice);
         this.setSalePrice(salePrice);
         this.setCategory(category);
+
+        super.registerEvent(ProductAddedEvent.builder().productId(this.id).build());
     }
 
     public void setName(String name) {
@@ -110,7 +109,17 @@ public class Product extends AbstractAggregateRoot<Product> {
 
     public void setEnabled(Boolean enabled) {
         Objects.requireNonNull(enabled);
+        Boolean wasEnabled = this.enabled;
         this.enabled = enabled;
+        if (wasEnabled != null && wasEnabled && !this.getEnabled()) {
+            this.registerEvent(ProductDelistedEvent.builder()
+                    .productId(this.getId())
+                    .build());
+        } else if (wasEnabled != null && !wasEnabled && this.getEnabled()) {
+            this.registerEvent(ProductListedEvent.builder()
+                    .productId(this.getId())
+                    .build());
+        }
     }
 
     public void setCategory(Category category) {
@@ -143,22 +152,23 @@ public class Product extends AbstractAggregateRoot<Product> {
 
         boolean wasOnSale = getHasDiscount();
 
-        if (regularPrice == null) {
-            throw new DomainException("Sale price cannot be greater than regular price.");
+        if (regularPrice.compareTo(salePrice) < 0) {
+            throw new DomainException("Sale price cannot be greater than regular price");
         }
 
         setRegularPrice(regularPrice);
         setSalePrice(salePrice);
 
-        if(pricesDidNotChange(oldRegularPrice, oldSalePrice)) {
+        if (pricesDidNotChange(oldRegularPrice, oldSalePrice)) {
             return;
         }
 
         registerPriceChangedEvent(oldRegularPrice, oldSalePrice);
 
-        if(isNewlyOnSale(wasOnSale)) {
+        if (isNewlyOnSale(wasOnSale)) {
             registerProductPlacedOnSaleEvent();
         }
+
     }
 
     private boolean pricesDidNotChange(BigDecimal oldRegularPrice, BigDecimal oldSalePrice) {
@@ -187,38 +197,13 @@ public class Product extends AbstractAggregateRoot<Product> {
                 .productId(this.id)
                 .regularPrice(this.regularPrice)
                 .salePrice(this.salePrice)
-                .build());
-    }
-
-    private void setId(UUID id) {
-        Objects.requireNonNull(id);
-        this.id = id;
-    }
-
-    private void setQuantityInStock(Integer quantityInStock) {
-        Objects.requireNonNull(quantityInStock);
-        if(quantityInStock < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.quantityInStock = quantityInStock;
-    }
-
-    private void calculateDiscountPercentage() {
-        if(regularPrice == null || salePrice == null || regularPrice.signum() == 0) {
-            discountPercentageRounded = 0;
-        }
-
-        discountPercentageRounded = BigDecimal.ONE
-                .subtract(salePrice.divide(regularPrice, 4, RoundingMode.HALF_UP))
-                .multiply(BigDecimal.valueOf(100))
-                .setScale(0, RoundingMode.HALF_UP)
-                .intValue();
+                .build()
+        );
     }
 
     private void setRegularPrice(BigDecimal regularPrice) {
         Objects.requireNonNull(regularPrice);
-
-        if(regularPrice.signum() == -1) {
+        if (regularPrice.signum() == -1) {
             throw new IllegalArgumentException();
         }
 
@@ -234,5 +219,31 @@ public class Product extends AbstractAggregateRoot<Product> {
 
         this.salePrice = salePrice;
         this.calculateDiscountPercentage();
+    }
+
+    private void setId(UUID id) {
+        Objects.requireNonNull(id);
+        this.id = id;
+    }
+
+    private void setQuantityInStock(Integer quantityInStock) {
+        Objects.requireNonNull(quantityInStock);
+        if (quantityInStock < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.quantityInStock =quantityInStock;
+    }
+
+    private void calculateDiscountPercentage() {
+        if (regularPrice == null || salePrice == null || regularPrice.signum() == 0) {
+            discountPercentageRounded = 0;
+            return;
+        }
+
+        discountPercentageRounded = BigDecimal.ONE
+                .subtract(salePrice.divide(regularPrice, 4, RoundingMode.HALF_UP))
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(0, RoundingMode.HALF_UP)
+                .intValue();
     }
 }
