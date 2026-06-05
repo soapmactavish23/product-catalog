@@ -1,4 +1,4 @@
-package com.algaworks.algashop.product.catalog.infrastructure.persistence.product;
+package com.algaworks.algashop.product.catalog.infrastructure.persistence.category;
 
 import com.algaworks.algashop.product.catalog.application.category.event.CategoryUpdatedEvent;
 import com.algaworks.algashop.product.catalog.domain.model.product.Product;

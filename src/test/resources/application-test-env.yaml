@@ -1,26 +1,7 @@
-server.port: 8083
-
 spring:
-  application:
-    name: product-catalog
   mongodb:
-    representation.uuid: standard
+    uri: mongodb://root:algashop@localhost:27017/product_catalog_test?authSource=admin
+
   data:
     mongodb:
       auto-index-creation: true
-
-logging:
-  level:
-    org.mongodb.driver.protocol.command: DEBUG
-    org.mongodb.driver.protocol.query: DEBUG
-    org.mongodb.driver.connection: DEBUG
-
-algashop:
-  data-load:
-    enabled: false
-    auto-delete: true
-    sources:
-      - location: db/testdata/categories.json
-        collection: categories
-      - location: db/testdata/products.json
-        collection: products

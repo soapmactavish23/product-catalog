@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
 @DataMongoTest
+@ActiveProfiles("test-env")
 @Import({
         MongoConfig.class,
         QuantityInStockAdjustmentMongoDBImpl.class,
