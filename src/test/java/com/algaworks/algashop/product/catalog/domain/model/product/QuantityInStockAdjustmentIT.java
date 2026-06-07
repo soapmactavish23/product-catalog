@@ -37,12 +37,12 @@ class QuantityInStockAdjustmentIT {
     private static UUID existingProduct = UUID.fromString("946cea3b-d11d-4f11-b88d-3089b4e74087");
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    void beforeEach() throws Exception {
         dataLoader.run(new DefaultApplicationArguments());
     }
 
     @Test
-    public void shouldIncreaseQuantity() {
+    void shouldIncreaseQuantity() {
         Product product = productRepository.findById(existingProduct).orElseThrow();
 
         quantityInStockAdjustment.increase(existingProduct, 25);
@@ -55,7 +55,7 @@ class QuantityInStockAdjustmentIT {
     }
 
     @Test
-    public void shouldDecreaseQuantity() {
+    void shouldDecreaseQuantity() {
         Product product = productRepository.findById(existingProduct).orElseThrow();
 
         quantityInStockAdjustment.decrease(existingProduct, 25);
@@ -68,11 +68,20 @@ class QuantityInStockAdjustmentIT {
     }
 
     @Test
-    public void shouldNotDecreaseQuantity() {
+    void shouldNotDecreaseQuantity() {
         Assertions.assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(()-> quantityInStockAdjustment.decrease(existingProduct, 100));
         Product product = productRepository.findById(existingProduct).orElseThrow();
         Assertions.assertThat(product.getQuantityInStock()).isEqualTo(50);
+    }
+
+    @Test
+    void shouldCalculateResult() {
+        Product product = productRepository.findById(existingProduct).orElseThrow();
+        var result = quantityInStockAdjustment.decrease(product.getId(), 40);
+
+        Assertions.assertThat(result.newQuantity()).isEqualTo(10);
+        Assertions.assertThat(result.previousQuantity()).isEqualTo(50);
     }
 
 }
