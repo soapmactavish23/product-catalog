@@ -29,7 +29,7 @@ public class ProductDetailOutput {
     private String slug;
     private Boolean hasDiscount;
 
-    private Integer quantiyInStock;
+    private Integer quantityInStock;
     private Integer discountPercentageRounded;
 
 }

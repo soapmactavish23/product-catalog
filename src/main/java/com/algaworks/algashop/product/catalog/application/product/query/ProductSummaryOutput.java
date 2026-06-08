@@ -23,14 +23,12 @@ public class ProductSummaryOutput {
     private BigDecimal salePrice;
     private Boolean inStock;
     private Boolean enabled;
-    private UUID categoryId;
     private CategoryMinimalOutput category;
     private String shortDescription;
 
-    private String slug;
     private Boolean hasDiscount;
 
-    private Integer quantiyInStock;
+    private Integer quantityInStock;
     private Integer discountPercentageRounded;
 
     private Float score;
@@ -38,5 +36,4 @@ public class ProductSummaryOutput {
     public String getSlug() {
         return Slugfier.slugify(this.getName());
     }
-
 }
