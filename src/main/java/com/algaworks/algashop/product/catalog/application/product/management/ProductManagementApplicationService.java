@@ -8,6 +8,7 @@ import com.algaworks.algashop.product.catalog.domain.model.category.CategoryRepo
 import com.algaworks.algashop.product.catalog.domain.model.product.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,8 @@ public class ProductManagementApplicationService {
 
     @CachePut(cacheNames = "algashop:products:v1", key = "#result.id",
             condition = "#input.enabled == true")
+    @CacheEvict(cacheNames = "algashop:products:v1", key = "#result.id",
+            condition = "#input.enabled == false")
     public ProductDetailOutput update(UUID productId, ProductInput input) {
         Product product = findProduct(productId);
         Category category = findCategory(input.getCategoryId());
@@ -47,19 +50,7 @@ public class ProductManagementApplicationService {
         return mapper.convert(product, ProductDetailOutput.class);
     }
 
-    private Product mapToProduct(ProductInput input) {
-        Category category = findCategory(input.getCategoryId());
-        return Product.builder()
-                .name(input.getName())
-                .brand(input.getBrand())
-                .description(input.getDescription())
-                .regularPrice(input.getRegularPrice())
-                .salePrice(input.getSalePrice())
-                .enabled(input.getEnabled())
-                .category(category)
-                .build();
-    }
-
+    @CacheEvict(cacheNames = "algashop:products:v1", key = "#result.id")
     public void disable(UUID productId) {
         Product product = findProduct(productId);
         product.disable();
@@ -87,6 +78,19 @@ public class ProductManagementApplicationService {
         Product product = findProduct(productId);
         StockMovement movement = stockService.withdraw(product, quantity);
         stockMovementRepository.save(movement);
+    }
+
+    private Product mapToProduct(ProductInput input) {
+        Category category = findCategory(input.getCategoryId());
+        return Product.builder()
+                .name(input.getName())
+                .brand(input.getBrand())
+                .description(input.getDescription())
+                .regularPrice(input.getRegularPrice())
+                .salePrice(input.getSalePrice())
+                .enabled(input.getEnabled())
+                .category(category)
+                .build();
     }
 
     private void updateProduct(Product product, ProductInput input) {
