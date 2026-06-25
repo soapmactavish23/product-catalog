@@ -10,6 +10,7 @@ import com.algaworks.algashop.product.catalog.domain.model.category.CategoryNotF
 import com.algaworks.algashop.product.catalog.domain.model.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -30,6 +31,7 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
     private final Mapper mapper;
     private final MongoOperations mongoOperations;
 
+    @Cacheable(cacheNames = "algashop:categories-filter:v1", condition = "#filter.isCacheable()")
     @Override
     public PageModel<CategoryDetailOutput> filter(CategoryFilter filter) {
         Query query = queryWith(filter);

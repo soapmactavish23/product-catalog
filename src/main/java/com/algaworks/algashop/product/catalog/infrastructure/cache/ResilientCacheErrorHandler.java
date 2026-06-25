@@ -5,6 +5,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.Cache;
 import org.springframework.cache.interceptor.CacheErrorHandler;
+import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,7 +22,11 @@ public class ResilientCacheErrorHandler implements CacheErrorHandler {
     @Override
     public void handleCachePutError(RuntimeException exception, Cache cache, Object key, @Nullable Object value) {
         String method = "PUT";
-        logWarn(exception, cache, key, method);
+        if(exception instanceof SerializationException) {
+            logError(exception, cache, key, method);
+        } else {
+            logWarn(exception, cache, key, method);
+        }
     }
 
     @Override
@@ -42,5 +47,14 @@ public class ResilientCacheErrorHandler implements CacheErrorHandler {
                 cache.getName(),
                 key,
                 exception.getClass().getSimpleName());
+    }
+
+    private static void logError(RuntimeException exception, Cache cache, Object key, String method) {
+        log.error("Error {} error | cache='{}' | key = '{}' | cause='{}'",
+                method,
+                cache.getName(),
+                key,
+                exception.getClass().getSimpleName(),
+                exception);
     }
 }
