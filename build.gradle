@@ -64,7 +64,6 @@ dependencies {
 	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
 	testImplementation 'org.springframework.boot:spring-boot-starter-cache-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-redis-test'
-
 	constraints {
 		testImplementation('io.rest-assured:rest-assured:6.0.0') {
 			version {
@@ -77,12 +76,11 @@ dependencies {
 			}
 		}
 	}
-
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
 	testImplementation 'org.testcontainers:testcontainers-mongodb'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	mockitoAgent 'org.mockito:mockito-core'
 }
 
@@ -136,6 +134,19 @@ tasks.register('integrationTest', Test) {
 		includeTestsMatching "*IT"
 		excludeTestsMatching "*Test"
 	}
+}
+
+bootJar {
+	archiveFileName = 'product-catalog.jar'
+}
+
+tasks.register('dockerBuild', Exec) {
+	description = 'Builds a multi-platform Docker image using Buildx'
+	group = 'build'
+	dependsOn('bootJar')
+	workingDir project.rootDir
+	commandLine 'docker', 'buildx', 'build', '--platform', 'linux/arm64/v8,linux/amd64',
+			'--tag', 'algashop/product-catalog:dev', '.'
 }
 
 asciidoctor {
