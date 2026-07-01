@@ -37,7 +37,7 @@ public class ProductManagementApplicationService {
 
     @CachePut(cacheNames = "algashop:products:v1", key = "#result.id",
             condition = "#input.enabled == true")
-    @CacheEvict(cacheNames = "algashop:products:v1", key = "#result.id",
+    @CacheEvict(cacheNames = "algashop:products:v1", key = "#productId",
             condition = "#input.enabled == false")
     public ProductDetailOutput update(UUID productId, ProductInput input) {
         Product product = findProduct(productId);
@@ -47,10 +47,11 @@ public class ProductManagementApplicationService {
         product.setCategory(category);
 
         productRepository.save(product);
+
         return mapper.convert(product, ProductDetailOutput.class);
     }
 
-    @CacheEvict(cacheNames = "algashop:products:v1", key = "#result.id")
+    @CacheEvict(cacheNames = "algashop:products:v1", key = "#productId")
     public void disable(UUID productId) {
         Product product = findProduct(productId);
         product.disable();
@@ -97,16 +98,16 @@ public class ProductManagementApplicationService {
         product.setName(input.getName());
         product.setBrand(input.getBrand());
         product.setDescription(input.getDescription());
-        product.changePrice(input.getRegularPrice(), input.getSalePrice());
         product.setEnabled(input.getEnabled());
+
+        product.changePrice(input.getRegularPrice(), input.getSalePrice());
     }
 
     private Product findProduct(UUID productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        return productRepository.findById(productId).orElseThrow(()-> new ProductNotFoundException(productId));
     }
 
     private Category findCategory(@NotNull UUID categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        return categoryRepository.findById(categoryId).orElseThrow(()-> new CategoryNotFoundException(categoryId));
     }
-
 }
