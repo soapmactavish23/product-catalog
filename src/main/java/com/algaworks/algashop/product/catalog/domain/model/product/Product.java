@@ -10,8 +10,7 @@ import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.TextScore;
+import org.springframework.data.mongodb.core.mapping.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,7 +20,7 @@ import java.util.*;
 @Document(collection = "products")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @CompoundIndex(name = "pidx_product_by_category_enabledTrue_salePrice",
         def = "{'category.id': 1, 'salePrice': 1}",
         partialFilter = "{'enabled': true}")
@@ -153,17 +152,16 @@ public class Product extends AbstractAggregateRoot<Product> {
 
     public Optional<Image> getImage(UUID imageId) {
         Objects.requireNonNull(imageId);
-        return this.images.stream().filter((image) -> image.getId().equals(imageId)).findFirst();
+        return this.images.stream().filter(image -> image.getId().equals(imageId)).findFirst();
     }
 
     public UUID addImage(String imageName) {
         Objects.requireNonNull(imageName);
         Image image = new Image(imageName);
         this.images.add(image);
-        if(this.mainImage == null) {
+        if (this.mainImage == null) {
             this.setMainImage(image);
         }
-
         return image.getId();
     }
 
@@ -177,7 +175,7 @@ public class Product extends AbstractAggregateRoot<Product> {
         Objects.requireNonNull(imageId);
         Image image = findImageById(imageId);
         this.images.remove(image);
-        if(image.equals(this.mainImage)) {
+        if (image.equals(this.mainImage)) {
             this.setMainImage(this.images.stream().findFirst().orElse(null));
         }
     }
