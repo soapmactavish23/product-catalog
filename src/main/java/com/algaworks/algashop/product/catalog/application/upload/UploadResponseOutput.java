@@ -9,8 +9,8 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
+@Builder
 public class UploadResponseOutput {
     private String uploadSignedUrl;
     private String remoteFileName;

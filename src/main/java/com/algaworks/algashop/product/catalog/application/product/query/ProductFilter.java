@@ -23,23 +23,21 @@ public class ProductFilter extends SortablePageFilter<ProductFilter.SortType> {
     private Boolean inStock;
 
     private BigDecimal priceFrom;
-
     private BigDecimal priceTo;
 
     private UUID[] categoriesId;
 
     private OffsetDateTime addedAtFrom;
-
     private OffsetDateTime addedAtTo;
 
     @Override
-    public ProductFilter.SortType getSortByPropertyOrDefault() {
-        return SortType.ADDED_AT;
+    public SortType getSortByPropertyOrDefault() {
+        return getSortByProperty() == null ? SortType.ADDED_AT : getSortByProperty();
     }
 
     @Override
     public Sort.Direction getSortDirectionOrDefault() {
-        return Sort.Direction.ASC;
+        return getSortDirection() == null ? Sort.Direction.ASC : getSortDirection();
     }
 
     @Getter

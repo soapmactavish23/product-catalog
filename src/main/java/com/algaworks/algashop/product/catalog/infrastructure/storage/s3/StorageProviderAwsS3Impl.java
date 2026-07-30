@@ -33,13 +33,13 @@ public class StorageProviderAwsS3Impl implements StorageProvider {
         String bucketName = properties.getBucketName();
         String key = fileReference.getFileName();
 
-        if(fileExists(key)) {
+        if (fileExists(key)) {
             throw new StorageProviderException(String.format("Remote file %s already exists", key));
         }
 
         ObjectMetadata.Builder metadataBuilder = ObjectMetadata.builder();
 
-        if(fileReference.isAllowPublicRead()) {
+        if (fileReference.isAllowPublicRead()) {
             metadataBuilder.acl("public-read");
         }
 
@@ -52,15 +52,17 @@ public class StorageProviderAwsS3Impl implements StorageProvider {
                     fileReference.getContentType().toString()
             );
         } catch (S3Exception e) {
-            throw new StorageProviderException(String.format("Unknow error when tried to create presigned URL " +
-                    "for file %s", key), e);
+            throw new StorageProviderException(String.format("Unknown error when tried to create" +
+                    " presigned URL for file %s", key), e);
         }
+
     }
 
     @Override
     public void deleteFile(String remoteFileName) {
-        if(!fileExists(remoteFileName)) {
-            throw new StorageProviderException(String.format("Remote file %s was not found", remoteFileName));
+        if (!fileExists(remoteFileName)) {
+            throw new StorageProviderException(
+                    String.format("Remote file %s was not found", remoteFileName));
         }
 
         try {

@@ -23,7 +23,6 @@ public class ProductDetailOutput implements Serializable {
     private BigDecimal salePrice;
     private Boolean inStock;
     private Boolean enabled;
-    private UUID categoryId;
     private CategoryMinimalOutput category;
     private String description;
 
@@ -37,5 +36,4 @@ public class ProductDetailOutput implements Serializable {
     private OffsetDateTime updatedAt;
 
     private ImageOutput mainImage;
-
 }

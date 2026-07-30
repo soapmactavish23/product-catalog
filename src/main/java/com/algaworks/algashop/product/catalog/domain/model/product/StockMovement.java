@@ -31,6 +31,7 @@ public class StockMovement {
                          MovementType type) {
         this.id = IdGenerator.generateTimeBasedUUID();
         this.occurredAt = OffsetDateTime.now();
+
         this.productId = productId;
         this.movementQuantity = movementQuantity;
         this.previousQuantity = previousQuantity;

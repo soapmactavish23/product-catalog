@@ -30,7 +30,7 @@ public class CategoryManagementApplicationService {
     @Caching(
             evict = {
                     @CacheEvict(value = "algashop:categories-filter:v1", key = "'default'"),
-                    @CacheEvict(value = "algashop:categories:v1", key = "'default'")
+                    @CacheEvict(value = "algashop:categories:v1", key = "#categoryId")
             }
     )
     public void update(UUID categoryId, CategoryInput input) {

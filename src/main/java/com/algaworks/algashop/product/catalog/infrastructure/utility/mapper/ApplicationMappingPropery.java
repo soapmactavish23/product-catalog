@@ -12,9 +12,7 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @Component
 @ConfigurationProperties("algashop.mapping")
-public class ApplicationMappingProperty {
-
+public class ApplicationMappingPropery {
     @NotBlank
     private String imageStorageUrl;
-
 }

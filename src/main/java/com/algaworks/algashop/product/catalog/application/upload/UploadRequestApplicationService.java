@@ -22,7 +22,7 @@ public class UploadRequestApplicationService {
     public UploadResponseOutput requestPreSignedUrl(UploadRequestInput input) {
         MediaType mediaType = ImageMediaTypeExtractor.fromFileName(input.getOriginalFileName());
 
-        if(!(mediaType.equals(MediaType.IMAGE_JPEG) || mediaType.equals(MediaType.IMAGE_PNG))) {
+        if (!(mediaType.equals(MediaType.IMAGE_JPEG) || mediaType.equals(MediaType.IMAGE_PNG))) {
             throw new IllegalArgumentException("Invalid image type");
         }
 

@@ -1,7 +1,6 @@
 package com.algaworks.algashop.product.catalog.domain.model;
 
-public class DomainEntityNotFoundException extends RuntimeException{
-
+public class DomainEntityNotFoundException extends RuntimeException {
     public DomainEntityNotFoundException() {
     }
 

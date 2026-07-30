@@ -18,7 +18,7 @@ import java.time.Duration;
 public class RedisCacheConfig implements CachingConfigurer {
 
     @Autowired
-    private ResilientCacheErrorHandler resilientCacheErrorHandler;
+    private ResilienceCacheErrorHandler resilienceCacheErrorHandler;
 
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
@@ -33,6 +33,7 @@ public class RedisCacheConfig implements CachingConfigurer {
     @Bean
     @Override
     public CacheErrorHandler errorHandler() {
-        return resilientCacheErrorHandler;
+        return resilienceCacheErrorHandler;
     }
+
 }

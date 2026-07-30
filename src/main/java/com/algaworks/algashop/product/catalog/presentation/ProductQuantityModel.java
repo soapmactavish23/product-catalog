@@ -10,5 +10,4 @@ public class ProductQuantityModel {
     @NotNull
     @Min(1)
     private Integer quantity;
-
 }

@@ -11,7 +11,6 @@ import com.algaworks.algashop.product.catalog.domain.model.category.CategoryRepo
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -36,7 +35,6 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
     private final Mapper mapper;
     private final MongoOperations mongoOperations;
 
-    @Cacheable(cacheNames = "algashop:categories-filter:v1", condition = "#filter.isCacheable()")
     @Override
     public PageModel<CategoryDetailOutput> filter(CategoryFilter filter) {
         Query query = queryWith(filter);
@@ -99,13 +97,12 @@ public class CategoryQueryServiceImpl implements CategoryQueryService {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.group().max("updatedAt").as("lastModified")
         );
-
         AggregationResults<Document> result = mongoOperations.aggregate(aggregation,
                 "categories", Document.class);
 
         Document document = result.getUniqueMappedResult();
 
-        if(document == null) {
+        if (document == null) {
             return OffsetDateTime.now();
         }
 

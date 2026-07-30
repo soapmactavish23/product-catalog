@@ -16,9 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataLoader implements ApplicationRunner {
 
     private final MongoOperations mongoOperations;
@@ -26,23 +26,22 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if(!properties.getEnabled()) {
+        if (!properties.getEnabled()) {
             return;
         }
 
         log.info("Data load started");
-        if(properties.getSources() == null) {
+        if (properties.getSources() == null) {
             log.info("No sources configured");
             return;
         }
 
         properties.getSources().forEach(this::importJsonFileToCollection);
-
     }
 
     private void importJsonFileToCollection(DataLoadProperties.DataLoadSource source) {
         String rawJson = AlgaShopResourceUtils.readContent(source.getLocation());
-        if(StringUtils.isBlank(rawJson)) {
+        if (StringUtils.isBlank(rawJson)) {
             log.warn("Resource {} is empty or not found", source.getLocation());
             return;
         }
@@ -50,7 +49,6 @@ public class DataLoader implements ApplicationRunner {
         List<Document> docs = parseJsonToDocuments(rawJson);
         int inserted = insertInto(docs, source.getCollection());
         log.info("{} - Imports: {}/{}", source.getLocation(), inserted, docs.size());
-
     }
 
     private List<Document> parseJsonToDocuments(String rawJson) {
@@ -58,18 +56,18 @@ public class DataLoader implements ApplicationRunner {
             BsonArray array = BsonArray.parse(rawJson);
             return array.stream().map(Object::toString).map(Document::parse).collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("Failed to parse JSON rosource {}", e.getMessage(), e);
+            log.error("Failed to parse JSON resource {}", e.getMessage(), e);
             return Collections.emptyList();
         }
     }
 
     private int insertInto(List<Document> mongoDocs, String collectionName) {
-        if(mongoDocs == null || mongoDocs.isEmpty()) {
+        if (mongoDocs == null || mongoDocs.isEmpty()) {
             return 0;
         }
 
         try {
-            if(Boolean.TRUE.equals(properties.getAutoDelete())) {
+            if (Boolean.TRUE.equals(properties.getAutoDelete())) {
                 mongoOperations.getCollection(collectionName).deleteMany(new BsonDocument());
             }
             return mongoOperations.insert(mongoDocs, collectionName).size();

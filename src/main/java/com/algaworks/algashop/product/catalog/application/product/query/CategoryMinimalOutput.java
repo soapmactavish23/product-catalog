@@ -10,9 +10,9 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CategoryMinimalOutput implements Serializable {
     private UUID id;
     private String name;

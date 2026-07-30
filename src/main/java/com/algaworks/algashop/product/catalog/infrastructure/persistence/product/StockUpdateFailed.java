@@ -1,7 +1,6 @@
 package com.algaworks.algashop.product.catalog.infrastructure.persistence.product;
 
 public class StockUpdateFailed extends RuntimeException {
-
     public StockUpdateFailed() {
     }
 

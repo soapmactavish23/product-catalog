@@ -16,8 +16,7 @@ public class StockService {
 
     public StockMovement restock(Product product, int quantity) {
         Objects.requireNonNull(product);
-
-        if(quantity < 1) {
+        if (quantity < 1) {
             throw new IllegalArgumentException();
         }
 
@@ -25,11 +24,13 @@ public class StockService {
         try {
             result = quantityInStockAdjustment.increase(product.getId(), quantity);
         } catch (Exception e) {
-            throw new DomainException(String.format("Failed to updated product %s stock", product.getId()));
+            throw new DomainException(String.format("Failed to restock product %s", product.getId()));
         }
 
-        if(result.inRestocked()) {
-            domainEventPublisher.publish(ProductRestockedEvent.builder().productId(product.getId()).build());
+        if (result.inRestocked()) {
+            domainEventPublisher.publish(
+                    ProductRestockedEvent.builder().productId(product.getId()).build()
+            );
         }
 
         return StockMovement.builder()
@@ -43,8 +44,7 @@ public class StockService {
 
     public StockMovement withdraw(Product product, int quantity) {
         Objects.requireNonNull(product);
-
-        if(quantity < 1) {
+        if (quantity <1) {
             throw new IllegalArgumentException();
         }
 
@@ -52,11 +52,13 @@ public class StockService {
         try {
             result = quantityInStockAdjustment.decrease(product.getId(), quantity);
         } catch (Exception e) {
-            throw new DomainException(String.format("Failed to withdraw product %s stock", product.getId()));
+            throw new DomainException(String.format("Failed to withdrawn product %s from stock", product.getId()));
         }
 
-        if(result.isOutOfStock()) {
-            domainEventPublisher.publish(ProductSoldOutEvent.builder().productId(product.getId()).build());
+        if (result.isOutOfStock()) {
+            domainEventPublisher.publish(
+                    ProductSoldOutEvent.builder().productId(product.getId()).build()
+            );
         }
 
         return StockMovement.builder()

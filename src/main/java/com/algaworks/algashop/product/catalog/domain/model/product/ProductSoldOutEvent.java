@@ -9,7 +9,6 @@ import java.util.UUID;
 @Getter
 @Builder
 public class ProductSoldOutEvent {
-
     private UUID productId;
 
     @Builder.Default

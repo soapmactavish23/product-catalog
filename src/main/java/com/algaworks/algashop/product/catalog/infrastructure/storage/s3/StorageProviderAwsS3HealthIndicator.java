@@ -14,10 +14,9 @@ public class StorageProviderAwsS3HealthIndicator implements HealthIndicator {
 
     @Override
     public @Nullable Health health() {
-        if(storageProviderAwsS3.healthCheck()) {
+        if (storageProviderAwsS3.healthCheck()) {
             return Health.up().build();
         }
-
         return Health.status("DEGRADED").build();
     }
 }

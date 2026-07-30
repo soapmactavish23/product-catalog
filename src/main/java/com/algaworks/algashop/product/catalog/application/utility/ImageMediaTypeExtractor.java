@@ -7,7 +7,7 @@ public class ImageMediaTypeExtractor {
 
     public static MediaType fromFileName(String fileName) {
         String extension = FilenameUtils.getExtension(fileName);
-        if(extension.equalsIgnoreCase("jpg")) {
+        if (extension.equalsIgnoreCase("jpg")) {
             extension = "jpeg";
         }
 

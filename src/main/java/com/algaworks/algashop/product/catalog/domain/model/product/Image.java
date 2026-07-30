@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 import java.util.UUID;
 
+
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,7 +26,7 @@ public class Image {
     }
 
     public Image(UUID id, String name) {
-        if(StringUtils.isBlank(name)) {
+        if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException();
         }
         Objects.requireNonNull(id);

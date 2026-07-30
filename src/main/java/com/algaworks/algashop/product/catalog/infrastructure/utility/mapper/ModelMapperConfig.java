@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 public class ModelMapperConfig {
 
     @Autowired
-    private ApplicationMappingProperty applicationMappingProperty;
+    private ApplicationMappingPropery applicationMappingPropery;
 
     private final Converter<String, String> fromStringToSlugConverter = ctx ->
             Slugfier.slugify(ctx.getSource());
@@ -63,7 +63,7 @@ public class ModelMapperConfig {
             return null;
         }
 
-        String imageStorageUrl = applicationMappingProperty.getImageStorageUrl();
+        String imageStorageUrl = applicationMappingPropery.getImageStorageUrl();
         return imageStorageUrl + "/" + fileName;
     }
 }

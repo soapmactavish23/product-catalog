@@ -18,7 +18,7 @@ spring:
       credentials:
         access-key: LSIAQAAAAAAVNCBMPNSG
         secret-key: test
-      S3:
+      s3:
         enabled: true
         path-style-access-enabled: true
   security:

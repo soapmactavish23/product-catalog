@@ -14,5 +14,4 @@ public class StorageProviderAwsS3Properties {
 
     @NotBlank
     private String bucketName;
-
 }

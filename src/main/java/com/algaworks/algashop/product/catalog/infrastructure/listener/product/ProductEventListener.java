@@ -6,14 +6,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
+@Slf4j
 public class ProductEventListener {
 
-    @Async
     @EventListener(ProductPriceChangedEvent.class)
+    @Async
     public void handle(ProductPriceChangedEvent event) {
-
+        log.info("ProductPriceChangedEvent " + event);
     }
 
     @EventListener(ProductPlacedOnSaleEvent.class)
@@ -21,9 +21,14 @@ public class ProductEventListener {
         log.info("ProductPlacedOnSaleEvent " + event);
     }
 
+    @EventListener(ProductAddedEvent.class)
+    public void handle(ProductAddedEvent event) {
+        log.info("ProductAddedEvent " + event);
+    }
+
     @EventListener(ProductDelistedEvent.class)
     public void handle(ProductDelistedEvent event) {
-        log.info("ProductDelistedEvent " + event);
+        log.info("ProductDelistedEvent  " + event);
     }
 
     @EventListener(ProductListedEvent.class)
@@ -33,7 +38,7 @@ public class ProductEventListener {
 
     @EventListener(ProductRestockedEvent.class)
     public void handle(ProductRestockedEvent event) {
-        log.info("ProductRestockedEvent " + event);
+        log.info("ProductRestockedEvent  " + event);
     }
 
     @EventListener(ProductSoldOutEvent.class)

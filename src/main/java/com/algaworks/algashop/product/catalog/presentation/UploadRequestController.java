@@ -10,14 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.algaworks.algashop.product.catalog.infrastructure.security.SecurityAnnotations.*;
+
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/upload-requests")
+@RequiredArgsConstructor
 public class UploadRequestController {
 
     private final UploadRequestApplicationService uploadRequestApplicationService;
 
     @PostMapping
+    @CanWriteProducts
     public UploadResponseOutput requestUpload(@RequestBody @Valid UploadRequestInput input) {
         return uploadRequestApplicationService.requestPreSignedUrl(input);
     }

@@ -24,6 +24,7 @@ public class ProductSummaryOutput {
     private Boolean inStock;
     private Boolean enabled;
     private CategoryMinimalOutput category;
+
     private String shortDescription;
 
     private Boolean hasDiscount;

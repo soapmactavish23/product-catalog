@@ -85,8 +85,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
                 .getMappedResults();
 
         List<ProductSummaryOutput> productSummaryOutputs = products.stream()
-                .map(p -> mapper.convert(p, ProductSummaryOutput.class))
-                .toList();
+                .map(p -> mapper.convert(p, ProductSummaryOutput.class)).toList();
 
         int totalPages = (int) Math.ceil((double) totalElements / (double) filter.getSize());
 

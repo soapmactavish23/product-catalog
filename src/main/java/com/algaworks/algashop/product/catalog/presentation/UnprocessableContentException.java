@@ -1,6 +1,6 @@
 package com.algaworks.algashop.product.catalog.presentation;
 
-public class UnprocessableContentException extends RuntimeException {
+public class UnprocessableContentException extends RuntimeException{
     public UnprocessableContentException() {
     }
 

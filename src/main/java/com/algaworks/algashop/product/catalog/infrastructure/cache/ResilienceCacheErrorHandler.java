@@ -8,10 +8,10 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
+@Slf4j
 @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
-public class ResilientCacheErrorHandler implements CacheErrorHandler {
+public class ResilienceCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
@@ -22,7 +22,7 @@ public class ResilientCacheErrorHandler implements CacheErrorHandler {
     @Override
     public void handleCachePutError(RuntimeException exception, Cache cache, Object key, @Nullable Object value) {
         String method = "PUT";
-        if(exception instanceof SerializationException) {
+        if (exception instanceof SerializationException) {
             logError(exception, cache, key, method);
         } else {
             logWarn(exception, cache, key, method);
@@ -41,20 +41,22 @@ public class ResilientCacheErrorHandler implements CacheErrorHandler {
         logWarn(exception, cache, "", method);
     }
 
-    private static void logWarn(RuntimeException exception, Cache cache, Object key, String method) {
+    private void logWarn(RuntimeException exception, Cache cache, Object key, String method) {
         log.warn("Cache {} error | cache='{}' | key = '{}' | cause='{}'",
                 method,
                 cache.getName(),
                 key,
-                exception.getClass().getSimpleName());
+                exception.getClass().getSimpleName()
+        );
     }
 
-    private static void logError(RuntimeException exception, Cache cache, Object key, String method) {
-        log.error("Error {} error | cache='{}' | key = '{}' | cause='{}'",
+    private void logError(RuntimeException exception, Cache cache, Object key, String method) {
+        log.error("Cache {} error | cache='{}' | key = '{}' | cause='{}'",
                 method,
                 cache.getName(),
                 key,
                 exception.getClass().getSimpleName(),
-                exception);
+                exception
+        );
     }
 }

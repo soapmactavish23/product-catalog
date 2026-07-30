@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ProductImagesQueryService {
+public class ProductImageQueryService {
 
     private final ProductRepository productRepository;
     private final Mapper mapper;
@@ -27,6 +27,7 @@ public class ProductImagesQueryService {
 
     public ImageOutput getImage(UUID productId, UUID imageId) {
         return this.getAllImages(productId).stream().filter(i -> i.getId().equals(imageId))
-                .findFirst().orElseThrow(() -> new DomainEntityNotFoundException());
+                .findFirst().orElseThrow(()-> new DomainEntityNotFoundException());
     }
+
 }

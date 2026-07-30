@@ -1,6 +1,5 @@
 package com.algaworks.algashop.product.catalog.application.product.management;
 
-import com.algaworks.algashop.product.catalog.application.product.query.ImageInput;
 import com.algaworks.algashop.product.catalog.application.product.query.ImageOutput;
 import com.algaworks.algashop.product.catalog.application.storage.StorageProvider;
 import com.algaworks.algashop.product.catalog.application.utility.Mapper;
@@ -31,12 +30,12 @@ public class ProductImageManagementApplicationService {
 
         Product product = findById(productId);
 
-        if(!storageProvider.fileExists(input.getRemoteFileName())) {
+        if (!storageProvider.fileExists(input.getRemoteFileName())) {
             throw new DomainException(String.format("Image of name %s was not found on storage provider",
                     input.getRemoteFileName()));
         }
 
-        if(productRepository.existsByImagesName(input.getRemoteFileName())) {
+        if (productRepository.existsByImagesName(input.getRemoteFileName())) {
             throw new DomainException(String.format("Image %s is already in use", input.getRemoteFileName()));
         }
 
@@ -67,15 +66,19 @@ public class ProductImageManagementApplicationService {
 
         Product product = findById(productId);
         product.changeMainImage(imageId);
-    }
-
-    private Image findImage(Product product, UUID imageId) {
-        return product.getImage(imageId).orElseThrow(() -> new DomainException(
-                        String.format("Image of id %s was not found on product %s", product.getId(), imageId)));
+        productRepository.save(product);
     }
 
     private Product findById(UUID productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+    }
+
+    private Image findImage(Product product, UUID imageId) {
+        return product.getImage(imageId)
+                .orElseThrow(() ->
+                        new DomainException(String.format("Image of id %s was not found on product %s",
+                                product.getId(), imageId)));
     }
 
 }

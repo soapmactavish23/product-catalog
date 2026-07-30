@@ -1,5 +1,6 @@
 package com.algaworks.algashop.product.catalog.infrastructure.persistence;
 
+import com.algaworks.algashop.product.catalog.application.security.SecurityChecks;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
@@ -12,7 +13,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Configuration
-@EnableMongoAuditing(dateTimeProviderRef = "auditingDateTimeProvider", auditorAwareRef = "auditorProvider")
+@EnableMongoAuditing(
+        dateTimeProviderRef = "auditingDateTimeProvider",
+        auditorAwareRef = "auditorProvider"
+)
 public class SpringDataAuditingConfig {
 
     @Bean
@@ -21,8 +25,13 @@ public class SpringDataAuditingConfig {
     }
 
     @Bean
-    public AuditorAware<UUID> auditorProvider() {
-        return () -> Optional.of(UUID.randomUUID());
+    public AuditorAware<UUID> auditorProvider(SecurityChecks securityCheck) {
+        return () -> {
+            if (!securityCheck.isAuthenticated() || securityCheck.isMachineAuthenticated()) {
+                return Optional.empty();
+            }
+            return Optional.of(securityCheck.getAuthenticatedUserId());
+        };
     }
 
 }

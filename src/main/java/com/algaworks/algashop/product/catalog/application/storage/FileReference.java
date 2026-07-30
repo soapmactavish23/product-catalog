@@ -17,13 +17,13 @@ public class FileReference {
     private boolean allowPublicRead;
 
     @Builder
-    public FileReference(String fileName, MediaType contentType, Long contentLength, Duration expiresIn,
-                         Boolean allowPublicRead) {
+    public FileReference(String fileName, MediaType contentType,
+                         Long contentLength, Duration expiresIn, boolean allowPublicRead) {
         Objects.requireNonNull(fileName);
         Objects.requireNonNull(contentType);
         Objects.requireNonNull(expiresIn);
 
-        if(contentLength <= 0) {
+        if (contentLength <= 0) {
             throw new IllegalArgumentException();
         }
 
@@ -32,5 +32,6 @@ public class FileReference {
         this.contentLength = contentLength;
         this.expiresIn = expiresIn;
         this.allowPublicRead = allowPublicRead;
+
     }
 }

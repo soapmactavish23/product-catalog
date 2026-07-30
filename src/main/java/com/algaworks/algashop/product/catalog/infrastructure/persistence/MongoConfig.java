@@ -25,9 +25,9 @@ public class MongoConfig {
 
     @Bean
     public MongoCustomConversions customConversions() {
-       return new MongoCustomConversions(
-               List.of(new OffsetDateTimeReadConverter(), new OffsetDateTimeWroteConverter())
-       );
+        return new MongoCustomConversions(
+                List.of(new OffsetDateTimeReadConverter(), new OffsetDateTimeWriteConverter())
+        );
     }
 
     @Bean
@@ -42,7 +42,7 @@ public class MongoConfig {
         }
     }
 
-    public static class OffsetDateTimeWroteConverter implements Converter<OffsetDateTime, Date> {
+    public static class OffsetDateTimeWriteConverter implements Converter<OffsetDateTime, Date> {
         @Override
         public @Nullable Date convert(OffsetDateTime source) {
             return Date.from(source.toInstant());
