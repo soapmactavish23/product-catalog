@@ -10,19 +10,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-@Slf4j
 @DataMongoTest
 @Import({MongoConfig.class, TestcontainerMongoDBConfig.class})
+@Slf4j
 class ProductRepositoryIT {
 
     @Autowired
     private ProductRepository productRepository;
 
     @Test
-    void shouldFilter() {
+    public void shouldFilter() {
         Page<ProductNameProjection> products = productRepository
                 .findAllByEnabled(true, PageRequest.of(0, 3));
-        products.forEach(p -> log.info("Product - Id: {} Nome: {}", p.id(), p.name()));
+        products.forEach(p -> log.info("Product - Id: {} Name: {}", p.id(), p.name()));
     }
 
 }

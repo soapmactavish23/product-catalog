@@ -6,10 +6,10 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Sort;
 
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 public class CategoryFilter extends SortablePageFilter<CategoryFilter.SortType> {
     private String name;
     private Boolean enabled;

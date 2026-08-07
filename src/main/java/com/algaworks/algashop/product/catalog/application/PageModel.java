@@ -1,5 +1,6 @@
 package com.algaworks.algashop.product.catalog.application;
 
+import com.algaworks.algashop.product.catalog.application.product.query.ProductSummaryOutput;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

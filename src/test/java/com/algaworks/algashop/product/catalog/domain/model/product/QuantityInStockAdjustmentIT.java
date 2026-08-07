@@ -12,12 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @DataMongoTest
-@ActiveProfiles("test-env")
 @Import({
         MongoConfig.class,
         QuantityInStockAdjustmentMongoDBImpl.class,
@@ -40,12 +39,12 @@ class QuantityInStockAdjustmentIT {
     private static UUID existingProduct = UUID.fromString("946cea3b-d11d-4f11-b88d-3089b4e74087");
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    public void beforeEach() throws Exception {
         dataLoader.run(new DefaultApplicationArguments());
     }
 
     @Test
-    void shouldIncreaseQuantity() {
+    public void shouldIncreaseQuantity() {
         Product product = productRepository.findById(existingProduct).orElseThrow();
 
         quantityInStockAdjustment.increase(existingProduct, 25);
@@ -58,7 +57,7 @@ class QuantityInStockAdjustmentIT {
     }
 
     @Test
-    void shouldDecreaseQuantity() {
+    public void shouldDecreaseQuantity() {
         Product product = productRepository.findById(existingProduct).orElseThrow();
 
         quantityInStockAdjustment.decrease(existingProduct, 25);
@@ -71,7 +70,7 @@ class QuantityInStockAdjustmentIT {
     }
 
     @Test
-    void shouldNotDecreaseQuantity() {
+    public void shouldNotDecreaseQuantity() {
         Assertions.assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(()-> quantityInStockAdjustment.decrease(existingProduct, 100));
         Product product = productRepository.findById(existingProduct).orElseThrow();
@@ -79,7 +78,7 @@ class QuantityInStockAdjustmentIT {
     }
 
     @Test
-    void shouldCalculateResult() {
+    public void shouldCalculateResult() {
         Product product = productRepository.findById(existingProduct).orElseThrow();
         var result = quantityInStockAdjustment.decrease(product.getId(), 40);
 

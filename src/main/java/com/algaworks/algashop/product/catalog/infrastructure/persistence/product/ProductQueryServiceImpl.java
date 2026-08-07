@@ -73,9 +73,9 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         PageRequest pageRequest = PageRequest.of(filter.getPage(), filter.getSize());
 
         operations.addAll(Arrays.asList(
-                sort(sortWith(filter)),
-                skip(pageRequest.getOffset()),
-                limit(filter.getSize())
+           sort(sortWith(filter)),
+           skip(pageRequest.getOffset()),
+           limit(filter.getSize())
         ));
 
         Aggregation aggregation = newAggregation(operations);

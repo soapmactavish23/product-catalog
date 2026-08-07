@@ -5,14 +5,15 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class ProductDetailOutputTestDataBuilder {
-    private ProductDetailOutputTestDataBuilder() {
 
+    private ProductDetailOutputTestDataBuilder() {
     }
 
     public static ProductDetailOutput.ProductDetailOutputBuilder aProduct() {
         return ProductDetailOutput.builder()
                 .id(UUID.randomUUID())
                 .addedAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .name("Notebook X11")
                 .brand("Deep Diver")
                 .description("A Gamer Notebook")
@@ -30,6 +31,7 @@ public class ProductDetailOutputTestDataBuilder {
         return ProductDetailOutput.builder()
                 .id(UUID.randomUUID())
                 .addedAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .name("Desktop I9000")
                 .brand("Deep Diver")
                 .description("A Gamer Desktop")

@@ -19,31 +19,31 @@ import static com.algaworks.algashop.product.catalog.infrastructure.security.Sec
 @RequiredArgsConstructor
 public class ProductImagesController {
 
-    private final ProductImageManagementApplicationService managementService;
+	private final ProductImageManagementApplicationService managementService;
 
     private final ProductImageQueryService queryService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @CanWriteProducts
-    public ImageOutput create(@PathVariable UUID productId,
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	@CanWriteProducts
+	public ImageOutput create(@PathVariable UUID productId,
                               @RequestBody @Valid ImageInput input) {
-        return managementService.create(productId, input);
-    }
+		return managementService.create(productId, input);
+	}
 
-    @DeleteMapping("{imageId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CanWriteProducts
-    public void delete(@PathVariable UUID productId, @PathVariable UUID imageId) {
-        managementService.delete(productId, imageId);
-    }
+	@DeleteMapping("{imageId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@CanWriteProducts
+	public void delete(@PathVariable UUID productId, @PathVariable UUID imageId) {
+		managementService.delete(productId, imageId);
+	}
 
-    @PutMapping("{imageId}/primary")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CanWriteProducts
-    public void primary(@PathVariable UUID productId, @PathVariable UUID imageId) {
-        managementService.primary(productId, imageId);
-    }
+	@PutMapping("{imageId}/primary")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@CanWriteProducts
+	public void primary(@PathVariable UUID productId, @PathVariable UUID imageId) {
+		managementService.primary(productId, imageId);
+	}
 
     @GetMapping
     @CanReadProducts

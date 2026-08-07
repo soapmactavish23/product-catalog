@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.net.URL;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor

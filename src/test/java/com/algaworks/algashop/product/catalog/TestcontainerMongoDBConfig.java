@@ -8,8 +8,9 @@ import org.testcontainers.mongodb.MongoDBContainer;
 @TestConfiguration
 public class TestcontainerMongoDBConfig {
 
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:8")
-            .withCommand("--replSet", "rs0");
+    private static final MongoDBContainer mongoDBContainer
+            = new MongoDBContainer("mongo:8")
+                .withCommand("--replSet", "rs0");
 
     static {
         mongoDBContainer.start();
@@ -27,7 +28,8 @@ public class TestcontainerMongoDBConfig {
                                 host: "localhost:27017"
                             }
                         ]
-                    })"""
+                    })
+                    """
             );
         } catch (Exception e) {
             throw new RuntimeException(e);

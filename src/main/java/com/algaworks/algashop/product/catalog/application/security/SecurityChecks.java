@@ -11,3 +11,4 @@ public interface SecurityChecks {
     boolean isMachineAuthenticated();
 
 }
+

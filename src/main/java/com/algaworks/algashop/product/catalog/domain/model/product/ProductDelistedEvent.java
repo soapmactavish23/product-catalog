@@ -11,7 +11,7 @@ import java.util.UUID;
 @ToString
 @Builder
 public class ProductDelistedEvent {
-    private UUID productId;
-    @Builder.Default
-    private OffsetDateTime delistedAt = OffsetDateTime.now();
+	private UUID productId;
+	@Builder.Default
+	private OffsetDateTime delistedAt = OffsetDateTime.now();
 }

@@ -11,7 +11,7 @@ public interface CategoryQueryService {
             key = "'default'",
             condition = "#filter.isCacheable()")
     PageModel<CategoryDetailOutput> filter(CategoryFilter filter);
-
+    
     @Cacheable(cacheNames = "algashop:categories:v1", key = "#categoryId")
     CategoryDetailOutput findById(UUID categoryId);
 

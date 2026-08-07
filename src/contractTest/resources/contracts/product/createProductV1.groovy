@@ -57,8 +57,8 @@ Contract.make {
                 inStock: anyBoolean(),
                 enabled: fromRequest().body('$.enabled'),
                 category: [
-                        id: anyUuid(),
-                        name: "Notebook"
+                    id: anyUuid(),
+                    name: "Notebook"
                 ],
                 description: fromRequest().body('$.description'),
         ])

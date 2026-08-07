@@ -2,15 +2,14 @@ package com.algaworks.algashop.product.catalog.contract.base;
 
 import com.algaworks.algashop.product.catalog.application.PageModel;
 import com.algaworks.algashop.product.catalog.application.ResourceNotFoundException;
+import com.algaworks.algashop.product.catalog.application.product.management.ProductInput;
 import com.algaworks.algashop.product.catalog.application.product.management.ProductManagementApplicationService;
-import com.algaworks.algashop.product.catalog.application.product.query.ProductDetailOutput;
-import com.algaworks.algashop.product.catalog.application.product.query.ProductDetailOutputTestDataBuilder;
-import com.algaworks.algashop.product.catalog.application.product.query.ProductFilter;
-import com.algaworks.algashop.product.catalog.application.product.query.ProductQueryService;
+import com.algaworks.algashop.product.catalog.application.product.query.*;
 import com.algaworks.algashop.product.catalog.presentation.ProductController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -51,11 +50,11 @@ public class ProductBase {
     @BeforeEach
     void setUp(RestDocumentationContextProvider documentationContextProvider) {
         RestAssuredMockMvc.mockMvc(MockMvcBuilders.webAppContextSetup(context)
-                .apply(documentationConfiguration(documentationContextProvider)
-                        .snippets().withTemplateFormat(TemplateFormats.asciidoctor())
-                        .and().operationPreprocessors()
-                        .withResponseDefaults(Preprocessors.prettyPrint()))
-                .alwaysDo(MockMvcRestDocumentation.document("{ClassName}/{methodName}"))
+                        .apply(documentationConfiguration(documentationContextProvider)
+                                .snippets().withTemplateFormat(TemplateFormats.asciidoctor())
+                                .and().operationPreprocessors()
+                                .withResponseDefaults(Preprocessors.prettyPrint()))
+                        .alwaysDo(MockMvcRestDocumentation.document("{ClassName}/{methodName}"))
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build()
         );
@@ -66,6 +65,7 @@ public class ProductBase {
         mockFilterProducts();
         mockCreateProduct();
         mockInvalidProductFindById();
+        mockValidProductUpdate();
     }
 
     private void mockInvalidProductFindById() {
@@ -74,8 +74,12 @@ public class ProductBase {
     }
 
     private void mockCreateProduct() {
+        ProductDetailOutput productDetailOutput = ProductDetailOutputTestDataBuilder.aProduct().id(createdProductId).inStock(false).build();
+        Mockito.when(productManagementApplicationService.create(Mockito.any(ProductInput.class)))
+                .thenReturn(productDetailOutput);
+
         Mockito.when(productQueryService.findById(createdProductId))
-                .thenReturn(ProductDetailOutputTestDataBuilder.aProduct().inStock(false).build());
+                .thenReturn(productDetailOutput);
     }
 
     private void mockFilterProducts() {
@@ -99,6 +103,11 @@ public class ProductBase {
 
     private void mockValidProductFindById() {
         Mockito.when(productQueryService.findById(validProductId))
+                .thenReturn(ProductDetailOutputTestDataBuilder.aProduct().id(validProductId).build());
+    }
+
+    private void mockValidProductUpdate() {
+        Mockito.when(productManagementApplicationService.update(Mockito.any(UUID.class), Mockito.any(ProductInput.class)))
                 .thenReturn(ProductDetailOutputTestDataBuilder.aProduct().id(validProductId).build());
     }
 

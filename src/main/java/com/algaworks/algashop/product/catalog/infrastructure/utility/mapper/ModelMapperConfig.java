@@ -28,8 +28,8 @@ public class ModelMapperConfig {
     private final Converter<String, String> fromStringToShortStringConverter = ctx ->
             StringUtils.abbreviate(ctx.getSource(), 50);
 
-    private final Converter<String, String> fromFileNameToUrlConverter = ctx ->
-            convertFromFileNameToUrl(ctx.getSource());
+    private final Converter<String, String> fromFileNameToUrlConverter
+            = ctx -> convertFromFileNameToUrl(ctx.getSource());
 
     @Bean
     public Mapper mapper() {
@@ -59,11 +59,12 @@ public class ModelMapperConfig {
     }
 
     private String convertFromFileNameToUrl(String fileName) {
-        if(StringUtils.isBlank(fileName)) {
+        if (StringUtils.isBlank(fileName)) {
             return null;
         }
 
         String imageStorageUrl = applicationMappingPropery.getImageStorageUrl();
         return imageStorageUrl + "/" + fileName;
     }
+
 }
