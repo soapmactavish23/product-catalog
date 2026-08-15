@@ -32,7 +32,6 @@ spring:
         jwt:
           issuer-uri: ${shared.params.auth-server-url}
 
-
 logging:
   level:
     com.netflix.discovery.DiscoveryClient: OFF
