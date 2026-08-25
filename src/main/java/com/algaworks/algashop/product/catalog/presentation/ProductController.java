@@ -1,19 +1,22 @@
 package com.algaworks.algashop.product.catalog.presentation;
 
-import com.algaworks.algashop.product.catalog.application.PageModel;
 import com.algaworks.algashop.product.catalog.application.product.management.ProductInput;
 import com.algaworks.algashop.product.catalog.application.product.management.ProductManagementApplicationService;
+import com.algaworks.algashop.product.catalog.application.PageModel;
 import com.algaworks.algashop.product.catalog.application.product.query.ProductDetailOutput;
 import com.algaworks.algashop.product.catalog.application.product.query.ProductFilter;
 import com.algaworks.algashop.product.catalog.application.product.query.ProductQueryService;
 import com.algaworks.algashop.product.catalog.application.product.query.ProductSummaryOutput;
 import com.algaworks.algashop.product.catalog.domain.model.category.CategoryNotFoundException;
+import com.algaworks.algashop.product.catalog.infrastructure.security.SecurityAnnotations;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -21,10 +24,10 @@ import java.util.UUID;
 
 import static com.algaworks.algashop.product.catalog.infrastructure.security.SecurityAnnotations.*;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
     private final ProductQueryService productQueryService;
@@ -43,8 +46,10 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @CanReadProducts
+    @SneakyThrows
     public ResponseEntity<ProductDetailOutput> findById(@PathVariable UUID productId) {
         log.info("Get product {}", productId);
+        Thread.sleep(Duration.ofMillis(100));
         ProductDetailOutput product = productQueryService.findById(productId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(Duration.ofMinutes(1)).cachePublic())
@@ -74,9 +79,12 @@ public class ProductController {
         productManagementApplicationService.enable(productId);
     }
 
+    @SneakyThrows
     @GetMapping
     @CanReadProducts
     public PageModel<ProductSummaryOutput> filter(ProductFilter productFilter) {
+        log.info("Get filter");
+        Thread.sleep(Duration.ofMillis(100));
         return productQueryService.filter(productFilter);
     }
 
