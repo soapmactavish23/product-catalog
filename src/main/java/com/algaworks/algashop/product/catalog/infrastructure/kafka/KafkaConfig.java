@@ -14,7 +14,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic productsEventTopic() {
-        return TopicBuilder.name("product-catalog.products.events")
+        return TopicBuilder.name("product-catalog.product.events")
                 .partitions(3)
                 .replicas(3)
                 .configs(Map.of("min.insync.replicas", "2"))
