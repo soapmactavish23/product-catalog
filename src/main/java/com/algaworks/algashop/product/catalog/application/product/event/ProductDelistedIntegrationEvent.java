@@ -1,5 +1,6 @@
 package com.algaworks.algashop.product.catalog.application.product.event;
 
+import com.algaworks.algashop.product.catalog.application.IntegrationEvent;
 import lombok.*;
 
 import java.time.OffsetDateTime;
@@ -11,7 +12,15 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDelistedIntegrationEvent {
+public class ProductDelistedIntegrationEvent implements IntegrationEvent {
 	private UUID productId;
 	private OffsetDateTime delistedAt;
+
+	@Override
+	public String getAggregateId() {
+		if(productId == null) {
+			return null;
+		}
+		return productId.toString();
+	}
 }
