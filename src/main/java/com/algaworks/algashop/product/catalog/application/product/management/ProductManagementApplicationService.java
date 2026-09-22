@@ -27,6 +27,7 @@ public class ProductManagementApplicationService {
 
     private final Mapper mapper;
 
+    @Transactional
     @CachePut(cacheNames = "algashop:products:v1", key = "#result.id",
             condition = "#input.enabled == true")
     public ProductDetailOutput create(ProductInput input) {
@@ -35,6 +36,7 @@ public class ProductManagementApplicationService {
         return mapper.convert(product, ProductDetailOutput.class);
     }
 
+    @Transactional
     @CachePut(cacheNames = "algashop:products:v1", key = "#result.id",
             condition = "#input.enabled == true")
     @CacheEvict(cacheNames = "algashop:products:v1", key = "#productId",
@@ -51,6 +53,7 @@ public class ProductManagementApplicationService {
         return mapper.convert(product, ProductDetailOutput.class);
     }
 
+    @Transactional
     @CacheEvict(cacheNames = "algashop:products:v1", key = "#productId")
     public void disable(UUID productId) {
         Product product = findProduct(productId);
