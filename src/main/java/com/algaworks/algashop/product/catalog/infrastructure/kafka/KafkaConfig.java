@@ -1,5 +1,6 @@
 package com.algaworks.algashop.product.catalog.infrastructure.kafka;
 
+import com.algaworks.algashop.product.catalog.application.EventPublishingException;
 import com.algaworks.algashop.product.catalog.application.IntegrationEvent;
 import com.algaworks.algashop.product.catalog.application.product.event.ProductIntegrationEventPublisher;
 import com.algaworks.algashop.product.catalog.infrastructure.utility.BeanValidationUtil;
@@ -45,9 +46,9 @@ public class KafkaConfig {
                         .get(40, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
+                throw new EventPublishingException("Interrupted while publishing", e);
             } catch (TimeoutException | ExecutionException | KafkaException e) {
-                throw new RuntimeException(e);
+                throw new EventPublishingException("Failed to publish", event, e);
             }
 
             RecordMetadata metadata = result.getRecordMetadata();
