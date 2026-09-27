@@ -42,6 +42,14 @@ public class KafkaConfig {
             beanValidationUtil.validate(event);
             SendResult<String, Object> result = null;
             try {
+                ProducerRecord<String, Object> record = new ProducerRecord<>(
+                        properties.getProductEventTopicName(),
+                        event.getAggregateId(),
+                        event
+                );
+
+                record.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+
                 result = kafkaTemplate.send(properties.getProductEventTopicName(), event.getAggregateId(), event)
                         .get(40, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
