@@ -48,7 +48,9 @@ public class KafkaConfig {
                         event
                 );
 
-                record.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+                if (event.getIdempotencyKey() != null) {
+                    record.headers().add("idempotency-key", event.getIdempotencyKey().toString().getBytes());
+                }
 
                 result = kafkaTemplate.send(properties.getProductEventTopicName(), event.getAggregateId(), event)
                         .get(40, TimeUnit.SECONDS);
