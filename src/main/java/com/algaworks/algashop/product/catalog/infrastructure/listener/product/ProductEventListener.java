@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.resilience.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @Slf4j
@@ -19,7 +20,8 @@ public class ProductEventListener {
     private final ProductIntegrationEventPublisher integrationEventPublisher;
     private final Mapper mapper;
 
-    @EventListener(ProductPriceChangedEvent.class)
+    @Async
+    @TransactionalEventListener
     public void handle(ProductPriceChangedEvent event) {
         log.info("ProductPriceChangedEvent " + event);
 
@@ -31,40 +33,46 @@ public class ProductEventListener {
         integrationEventPublisher.send(v2IntegrationEvent);
     }
 
-    @EventListener(ProductPlacedOnSaleEvent.class)
+    @Async
+    @TransactionalEventListener
     public void handle(ProductPlacedOnSaleEvent event) {
         log.info("ProductPlacedOnSaleEvent " + event);
 //        integrationEventPublisher.send(event, event.getProductId().toString(), "product-catalog.product.events");
     }
 
-    @EventListener(ProductAddedEvent.class)
+    @Async
+    @TransactionalEventListener
     public void handle(ProductAddedEvent event) {
         log.info("ProductAddedEvent " + event);
         ProductAddedIntegrationEvent integrationEvent = mapper.convert(event, ProductAddedIntegrationEvent.class);
         integrationEventPublisher.send(integrationEvent);
     }
 
-    @EventListener(ProductDelistedEvent.class)
+    @Async
+    @TransactionalEventListener
     public void handle(ProductDelistedEvent event) {
         log.info("ProductDelistedEvent  " + event);
         var integrationEvent = mapper.convert(event, ProductDelistedIntegrationEvent.class);
         integrationEventPublisher.send(integrationEvent);
     }
 
-    @EventListener(ProductListedEvent.class)
+    @Async
+    @TransactionalEventListener
     public void handle(ProductListedEvent event) {
         log.info("ProductListedEvent " + event);
         var integrationEvent = mapper.convert(event, ProductListedIntegrationEvent.class);
         integrationEventPublisher.send(integrationEvent);
     }
 
-    @EventListener(ProductRestockedEvent.class)
+    @Async
+    @TransactionalEventListener
     public void handle(ProductRestockedEvent event) {
         log.info("ProductRestockedEvent  " + event);
 //        integrationEventPublisher.send(event, event.getProductId().toString(), "product-catalog.product.events");
     }
 
-    @EventListener(ProductSoldOutEvent.class)
+    @Async
+    @TransactionalEventListener@EventListener(ProductSoldOutEvent.class)
     public void handle(ProductSoldOutEvent event) {
         log.info("ProductSoldOutEvent " + event);
 //        integrationEventPublisher.send(event, event.getProductId().toString(), "product-catalog.product.events");

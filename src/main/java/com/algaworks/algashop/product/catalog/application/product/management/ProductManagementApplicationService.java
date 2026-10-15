@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductManagementApplicationService {
@@ -63,6 +62,8 @@ public class ProductManagementApplicationService {
         productRepository.save(product);
     }
 
+    @Transactional
+    @CacheEvict(cacheNames = "algashop:products:v1", key = "#productId")
     public void enable(UUID productId) {
         Product product = findProduct(productId);
         product.enable();
@@ -75,9 +76,6 @@ public class ProductManagementApplicationService {
         Product product = findProduct(productId);
         StockMovement movement = stockService.restock(product, quantity);
         stockMovementRepository.save(movement);
-        if (quantity == 2) {
-            throw new RuntimeException();
-        }
     }
 
     @Transactional
