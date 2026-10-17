@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class LocalEventPublisherConfig {
 
     @Bean
-    public LocalEventPublisher applicationMessagePublisher(
+    public LocalEventPublisher localEventPublisher(
             ApplicationEventPublisher applicationEventPublisher
     ) {
         return applicationEventPublisher::publishEvent;

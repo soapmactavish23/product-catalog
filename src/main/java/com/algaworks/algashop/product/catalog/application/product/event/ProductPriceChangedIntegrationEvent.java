@@ -15,12 +15,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductPriceChangedIntegrationEvent implements IntegrationEvent {
-    private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
-    private UUID productId;
-    private OffsetDateTime changedAt;
+	private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
+	private UUID productId;
+	private OffsetDateTime changedAt;
 
-    @Override
-    public String getAggregateId() {
-        return productId.toString();
-    }
+	@Override
+	public String getAggregateId() {
+		return productId.toString();
+	}
 }

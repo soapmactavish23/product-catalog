@@ -7,12 +7,10 @@ import lombok.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductDelistedIntegrationEvent implements IntegrationEvent {
 	private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
 	private UUID productId;
@@ -20,7 +18,7 @@ public class ProductDelistedIntegrationEvent implements IntegrationEvent {
 
 	@Override
 	public String getAggregateId() {
-		if(productId == null) {
+		if (productId == null) {
 			return null;
 		}
 		return productId.toString();

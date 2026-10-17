@@ -60,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EventPublishingException.class)
-    public ProblemDetail handleEventPublishingException(Exception exception) {
+    public ProblemDetail handleEventPublishingException(EventPublishingException exception) {
         log.error(exception.getMessage(), exception);
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);
         problemDetail.setTitle("Service unavailable");

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-@Slf4j
 @Configuration
 public class DomainEventPublisherConfig {
 
@@ -17,11 +16,10 @@ public class DomainEventPublisherConfig {
             ApplicationEventPublisher applicationEventPublisher
     ) {
         return event -> {
-            if(!TransactionSynchronizationManager.isSynchronizationActive()) {
+            if (!TransactionSynchronizationManager.isSynchronizationActive()) {
                 applicationEventPublisher.publishEvent(event);
                 return;
             }
-
             TransactionSynchronizationManager.registerSynchronization(
                     new TransactionSynchronization() {
                         @Override

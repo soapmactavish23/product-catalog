@@ -74,7 +74,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-data-redis-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
-
     constraints {
         testImplementation('io.rest-assured:rest-assured:6.0.0') {
             version {
