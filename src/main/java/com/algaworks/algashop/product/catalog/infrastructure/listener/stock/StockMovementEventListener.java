@@ -4,10 +4,13 @@ import com.algaworks.algashop.product.catalog.domain.model.DomainEventPublisher;
 import com.algaworks.algashop.product.catalog.domain.model.product.ProductRestockedEvent;
 import com.algaworks.algashop.product.catalog.domain.model.product.ProductSoldOutEvent;
 import com.algaworks.algashop.product.catalog.domain.model.stock.StockMovementRegisteredEvent;
+import com.algaworks.algashop.product.catalog.domain.model.stock.StockMovementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
 @Component
@@ -31,6 +34,12 @@ public class StockMovementEventListener {
                     .productId(event.getProductId())
                     .build());
         }
+    }
+
+    @TransactionalEventListener
+    @CacheEvict(cacheNames = "algashop:products:v1", key = "#event.productId")
+    public void handleEvictProductCache(StockMovementRegisteredEvent event) {
+        log.info("StockMovementRegisteredEvent handle product {} cache evict", event.getProductId());
     }
 
 }
