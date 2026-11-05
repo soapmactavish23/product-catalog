@@ -38,6 +38,9 @@ spring:
         ProductCatalog.ProductDelistedIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductDelistedIntegrationEvent,
         ProductCatalog.ProductListedIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductListedIntegrationEvent,
         ProductCatalog.ProductAddedIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductAddedIntegrationEvent,
+        ProductCatalog.ProductPlacedOnSaleIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductPlacedOnSaleIntegrationEvent,
+        ProductCatalog.ProductRestockedIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductRestockedIntegrationEvent,
+        ProductCatalog.ProductSoldOutIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductSoldOutIntegrationEvent,
         ProductCatalog.ProductPriceChangedIntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductPriceChangedIntegrationEvent,
         ProductCatalog.ProductPriceChangedV2IntegrationEvent:com.algaworks.algashop.product.catalog.application.product.event.ProductPriceChangedV2IntegrationEvent
     admin:
@@ -56,6 +59,15 @@ spring:
         request.timeout.ms: 5000
         delivery.timeout.ms: 30000
         max.block.ms: 5000
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        spring.json.trusted.packages: com.algaworks.algashop.*
+        spring.json.key.default.type: java.lang.String
+        spring.json.value.default.type: java.lang.String
+        spring.json.value.type.method: com.algaworks.algashop.product.catalog.infrastructure.kafka.KafkaConsumerTypeIdIdentifier.readType
 
 logging:
   level:
@@ -77,6 +89,7 @@ algashop:
   messaging:
     kafka:
       product-event-topic-name: product-catalog.product.events
+      stock-commands-topic-name: product-catalog.stock.commands
 
 eureka:
   client:

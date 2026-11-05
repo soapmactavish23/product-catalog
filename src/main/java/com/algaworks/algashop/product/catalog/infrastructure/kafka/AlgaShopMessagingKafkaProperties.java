@@ -11,6 +11,10 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @ConfigurationProperties("algashop.messaging.kafka")
 public class AlgaShopMessagingKafkaProperties {
+
 	@NotBlank
 	private String productEventTopicName;
+
+	@NotBlank
+	private String stockCommandsTopicName;
 }
