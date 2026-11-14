@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class EventPublishingException extends RuntimeException {
 
-	private OutboundIntegrationEvent  event;
+	private OutboundIntegrationEvent event;
 
 	public EventPublishingException() {
 	}
@@ -27,7 +27,7 @@ public class EventPublishingException extends RuntimeException {
 	}
 
 	public EventPublishingException(String message,
-									OutboundIntegrationEvent event,
+	                                OutboundIntegrationEvent event,
 	                                Throwable e) {
 		super("%s Event=%s AggregateId=%s".formatted(message, event.getClass().getSimpleName(), event.getAggregateId()), e);
 		this.event = event;

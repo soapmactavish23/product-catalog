@@ -13,22 +13,22 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductPlacedOnSaleIntegrationEvent implements OutboundIntegrationEvent {
-    private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
-    private UUID productId;
-    private BigDecimal regularPrice;
-    private BigDecimal salePrice;
-    private OffsetDateTime placedOnSaleAt;
+	private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
+	private UUID productId;
+	private BigDecimal regularPrice;
+	private BigDecimal salePrice;
+	private OffsetDateTime placedOnSaleAt;
 
-    @Override
-    public String getAggregateId() {
-        if (productId == null) {
-            return null;
-        }
-        return productId.toString();
-    }
+	@Override
+	public String getAggregateId() {
+		if (productId == null) {
+			return null;
+		}
+		return productId.toString();
+	}
 
-    @Override
-    public UUID getIdempotencyKey() {
-        return idempotencyKey;
-    }
+	@Override
+	public UUID getIdempotencyKey() {
+		return idempotencyKey;
+	}
 }

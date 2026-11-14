@@ -1,8 +1,9 @@
 package com.algaworks.algashop.product.catalog.domain.model.stock;
 
-import com.algaworks.algashop.product.catalog.domain.model.DomainEventPublisher;
 import com.algaworks.algashop.product.catalog.domain.model.DomainException;
-import com.algaworks.algashop.product.catalog.domain.model.product.*;
+import com.algaworks.algashop.product.catalog.domain.model.product.Product;
+import com.algaworks.algashop.product.catalog.domain.model.product.ProductNotFoundException;
+import com.algaworks.algashop.product.catalog.domain.model.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class StockService {
             throw new IllegalArgumentException();
         }
 
-        QuantityInStockAdjustment.Result result = quantityInStockAdjustment.increase(productId, quantity);
+        QuantityInStockAdjustment.Result result = quantityInStockAdjustment.increase(productId, quantity);;
 
         return StockMovement.builder()
                 .productId(productId)
@@ -53,6 +54,7 @@ public class StockService {
     }
 
     public List<StockMovement> withdrawAll(String orderId, List<StockReservationItem> items) {
+
         Map<UUID, Integer> quantityByProduct = items.stream().collect(
                 Collectors.groupingBy(
                         StockReservationItem::getProductId,
@@ -67,11 +69,11 @@ public class StockService {
         quantityByProduct.forEach((productId, quantity) -> {
             Product product = productById.get(productId);
 
-            if(product == null) {
+            if (product == null) {
                 throw new ProductNotFoundException(productId);
             }
 
-            if(!product.hasQuantity(quantity)) {
+            if (!product.hasQuantity(quantity)) {
                 throw new InsufficientStockException(productId, quantity, product.getQuantityInStock());
             }
         });

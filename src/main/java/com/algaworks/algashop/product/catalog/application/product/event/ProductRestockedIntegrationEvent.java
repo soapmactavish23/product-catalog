@@ -12,20 +12,20 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRestockedIntegrationEvent implements OutboundIntegrationEvent {
-    private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
-    private UUID productId;
-    private OffsetDateTime restockedAt;
+	private UUID idempotencyKey = IdGenerator.generateTimeBasedUUID();
+	private UUID productId;
+	private OffsetDateTime restockedAt;
 
-    @Override
-    public String getAggregateId() {
-        if (productId == null) {
-            return null;
-        }
-        return productId.toString();
-    }
+	@Override
+	public String getAggregateId() {
+		if (productId == null) {
+			return null;
+		}
+		return productId.toString();
+	}
 
-    @Override
-    public UUID getIdempotencyKey() {
-        return idempotencyKey;
-    }
+	@Override
+	public UUID getIdempotencyKey() {
+		return idempotencyKey;
+	}
 }

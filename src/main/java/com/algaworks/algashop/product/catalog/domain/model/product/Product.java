@@ -294,10 +294,10 @@ public class Product extends AbstractAggregateRoot<Product> {
                 .intValue();
     }
 
-    public boolean hasQuantity(Integer quantity) {
-        if(quantity < 1) {
+	public boolean hasQuantity(int quantity) {
+        if (quantity < 1) {
             throw new IllegalArgumentException();
         }
-        return this.getQuantityInStock() != null && this.getQuantityInStock() >= quantity;
-    }
+		return this.getQuantityInStock() != null && this.getQuantityInStock() >= quantity;
+	}
 }

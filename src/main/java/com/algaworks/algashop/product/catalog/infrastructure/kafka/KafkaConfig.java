@@ -144,7 +144,7 @@ public class KafkaConfig {
 				metadata.topic(),
 				metadata.partition(),
 				metadata.offset()
-		);
+			);
 	}
 
 }

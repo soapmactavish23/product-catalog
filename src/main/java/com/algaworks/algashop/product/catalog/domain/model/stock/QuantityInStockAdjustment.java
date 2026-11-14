@@ -10,5 +10,5 @@ public interface QuantityInStockAdjustment {
             UUID productId,
             int previousQuantity,
             int newQuantity
-    ) {}
+    ){}
 }
